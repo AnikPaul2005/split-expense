@@ -2947,6 +2947,21 @@ function sendWhatsApp(
 
     }
 
+const share = Number(shareAmount);
+const total = Number(totalAmount);
+const paidByName = String(payer).trim();
+
+let settlementMessage;
+
+if (memberName.trim().toLowerCase() === paidByName.toLowerCase()) {
+    const receiveAmount = total - share;
+
+    settlementMessage =
+`You will receive ₹${receiveAmount.toFixed(2)}.`;
+} else {
+    settlementMessage =
+`You have to pay ₹${share.toFixed(2)} to ${paidByName}.`;
+}
 
 const message =
 `💸 SplitMate Expense
@@ -2954,19 +2969,13 @@ const message =
 Hi ${memberName},
 
 Expense: ${expenseName}
-Total Amount: ₹${Number(
-    totalAmount
-).toFixed(2)}
+Total Amount: ₹${total.toFixed(2)}
 
-Your Share: ₹${Number(
-    shareAmount
-).toFixed(2)}
+Your Share: ₹${share.toFixed(2)}
 
-Paid by: ${payer}
+Paid by: ${paidByName}
 
-You have to pay ₹${Number(
-    shareAmount
-).toFixed(2)} to ${payer}.
+${settlementMessage}
 
 — SplitMate`;
 
