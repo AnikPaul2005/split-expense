@@ -1,0 +1,3054 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>SplitMate - Expense Splitter</title>
+
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f4f6f9;
+    color: #222;
+}
+
+header {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: white;
+    text-align: center;
+    padding: 30px 15px;
+}
+
+header h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.container {
+    width: 95%;
+    max-width: 1100px;
+    margin: 25px auto;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    border-radius: 15px;
+    padding: 22px;
+    box-shadow: 0 5px 20px rgba(0,0,0,.08);
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+h2 {
+    margin-bottom: 18px;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    font-size: 15px;
+    outline: none;
+}
+
+input:focus,
+select:focus {
+    border-color: #4f46e5;
+}
+
+button {
+    border: none;
+    border-radius: 8px;
+    padding: 11px 16px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    opacity: .9;
+}
+
+.primary {
+    background: #4f46e5;
+    color: white;
+}
+
+.danger {
+    background: #ef4444;
+    color: white;
+}
+
+.small {
+    padding: 7px 10px;
+    font-size: 12px;
+}
+
+
+/* MEMBERS */
+
+.member-input {
+    display: flex;
+    gap: 8px;
+}
+
+.member-input input {
+    flex: 1;
+    min-width: 0;
+}
+
+.member-input button {
+    width: 80px;
+}
+
+.member {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8fafc;
+    padding: 11px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+
+/* SPLIT */
+
+.split-title {
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.split-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.split-btn {
+    background: white;
+    border: 2px solid #ddd;
+    padding: 15px;
+}
+
+.split-btn.active {
+    border-color: #4f46e5;
+    background: #eef2ff;
+}
+
+
+/* PEOPLE */
+
+.person-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8fafc;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.person-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.person-left input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+}
+
+.amount {
+    width: 110px;
+    margin: 0;
+    padding: 8px;
+}
+
+.total-check {
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    font-weight: bold;
+}
+
+
+/* FILTER */
+
+.filter-box {
+    background: #f8fafc;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.filter-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.quick-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.filter-btn {
+    background: white;
+    border: 1px solid #ccc;
+    padding: 9px 12px;
+}
+
+.filter-btn.active {
+    background: #4f46e5;
+    color: white;
+    border-color: #4f46e5;
+}
+
+
+/* EXPENSE */
+
+.expense {
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 12px;
+}
+
+.expense-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.expense-name {
+    font-weight: bold;
+    font-size: 17px;
+}
+
+.expense-total {
+    color: #4f46e5;
+    font-weight: bold;
+}
+
+.expense-date {
+    color: #666;
+    font-size: 13px;
+}
+
+.breakdown {
+    background: white;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+}
+
+
+/* SUMMARY */
+
+.summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.summary-box {
+    background: #f8fafc;
+    padding: 18px;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.summary-box h3 {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.summary-box p {
+    font-size: 23px;
+    font-weight: bold;
+    color: #4f46e5;
+}
+
+
+/* BALANCE */
+
+.balance {
+    display: flex;
+    justify-content: space-between;
+    padding: 13px;
+    background: #f8fafc;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.get {
+    color: #16a34a;
+    font-weight: bold;
+}
+
+.pay {
+    color: #dc2626;
+    font-weight: bold;
+}
+
+
+/* SETTLEMENT */
+
+.settlement {
+    padding: 15px;
+    background: #f8fafc;
+    border-left: 5px solid #4f46e5;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.settlement strong {
+    color: #4f46e5;
+}
+
+.empty {
+    text-align: center;
+    color: #888;
+    padding: 20px;
+}
+
+footer {
+    text-align: center;
+    padding: 30px;
+    color: #777;
+}
+
+
+@media(max-width:750px) {
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full {
+        grid-column: auto;
+    }
+
+    .summary {
+        grid-template-columns: 1fr;
+    }
+
+    .split-buttons {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-row {
+        grid-template-columns: 1fr;
+    }
+
+    .member-input {
+        flex-wrap: wrap;
+    }
+
+    .member-input input {
+        min-width: 150px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<h1>💸 SplitMate</h1>
+
+<p>
+Smart Group Expense Splitter
+</p>
+
+</header>
+
+
+<div class="container">
+
+<div class="grid">
+
+
+<!-- =================================================
+     MEMBERS
+================================================= -->
+
+<div class="card">
+
+<h2>👥 Group Members</h2>
+
+<div class="member-input">
+
+<input
+    id="memberName"
+    type="text"
+    placeholder="Enter member name"
+>
+
+<input
+    id="memberPhone"
+    type="tel"
+    placeholder="WhatsApp number"
+>
+
+<button
+    class="primary"
+    onclick="addMember()"
+>
+Add
+</button>
+
+</div>
+
+<div id="memberList"></div>
+
+</div>
+
+
+
+<!-- =================================================
+     ADD EXPENSE
+================================================= -->
+
+<div class="card">
+
+<h2>💰 Add Expense</h2>
+
+
+<input
+    id="expenseName"
+    type="text"
+    placeholder="Expense name e.g. Biryani"
+>
+
+
+<!-- DATE -->
+
+<div class="split-title">
+📅 Expense Date
+</div>
+
+<input
+    id="expenseDate"
+    type="date"
+>
+
+
+<!-- SPLIT -->
+
+<div class="split-title">
+
+How do you want to split?
+
+</div>
+
+
+<div class="split-buttons">
+
+<button
+    id="equalBtn"
+    class="split-btn active"
+    onclick="chooseSplit('equal')"
+>
+
+⚖️ Equal Split
+
+<br>
+
+<small>
+Everyone pays equally
+</small>
+
+</button>
+
+
+<button
+    id="differentBtn"
+    class="split-btn"
+    onclick="chooseSplit('different')"
+>
+
+🍛 Different Amounts
+
+<br>
+
+<small>
+Everyone pays differently
+</small>
+
+</button>
+
+</div>
+
+
+
+<!-- EQUAL -->
+
+<div id="equalArea">
+
+<input
+    id="totalAmount"
+    type="number"
+    min="0"
+    placeholder="Total bill amount"
+>
+
+
+<div class="split-title">
+
+Who is included?
+
+</div>
+
+
+<div id="equalPeople"></div>
+
+</div>
+
+
+
+<!-- DIFFERENT -->
+
+<div
+    id="differentArea"
+    style="display:none;"
+>
+
+<div class="split-title">
+
+Enter each person's amount:
+
+</div>
+
+
+<div id="differentPeople"></div>
+
+
+<div
+    id="differentTotal"
+    class="total-check"
+>
+
+Total: ₹0.00
+
+</div>
+
+</div>
+
+
+
+<!-- PAYER -->
+
+<div class="split-title">
+
+💳 Who paid the full bill?
+
+</div>
+
+
+<select id="payer">
+
+<option value="">
+Select payer
+</option>
+
+</select>
+
+
+
+<button
+    class="primary"
+    style="width:100%;"
+    onclick="addExpense()"
+>
+
++ Add Expense
+
+</button>
+
+</div>
+
+
+
+<!-- =================================================
+     EXPENSES + FILTER
+================================================= -->
+
+<div class="card full">
+
+<h2>📋 Expenses</h2>
+
+
+<div class="filter-box">
+
+<strong>
+🔎 Find Expenses
+</strong>
+
+
+<br><br>
+
+
+<input
+    id="searchBox"
+    type="text"
+    placeholder="Search by expense or person..."
+    oninput="applyFilters()"
+>
+
+
+<div class="filter-row">
+
+<input
+    id="fromDate"
+    type="date"
+    onchange="applyFilters()"
+>
+
+<input
+    id="toDate"
+    type="date"
+    onchange="applyFilters()"
+>
+
+</div>
+
+
+<div class="quick-filters">
+
+
+<button
+    class="filter-btn"
+    onclick="quickFilter('all')"
+>
+All
+</button>
+
+
+<button
+    class="filter-btn"
+    onclick="quickFilter('month')"
+>
+This Month
+</button>
+
+
+<button
+    class="filter-btn"
+    onclick="quickFilter('lastMonth')"
+>
+Last Month
+</button>
+
+
+<button
+    class="filter-btn"
+    onclick="quickFilter('year')"
+>
+This Year
+</button>
+
+
+<button
+    class="filter-btn"
+    onclick="quickFilter('lastYear')"
+>
+Last Year
+</button>
+
+
+<button
+    class="filter-btn"
+    onclick="quickFilter('clear')"
+>
+Clear
+</button>
+
+</div>
+
+</div>
+
+
+<div id="expenseList"></div>
+
+</div>
+
+
+
+<!-- =================================================
+     SUMMARY
+================================================= -->
+
+<div class="card full">
+
+<h2>
+📊 Summary
+</h2>
+
+<div class="summary">
+
+
+<div class="summary-box">
+
+<h3>
+Selected Period Expense
+</h3>
+
+<p id="totalExpense">
+₹0.00
+</p>
+
+</div>
+
+
+<div class="summary-box">
+
+<h3>
+People
+</h3>
+
+<p id="peopleCount">
+0
+</p>
+
+</div>
+
+
+<div class="summary-box">
+
+<h3>
+Average
+</h3>
+
+<p id="average">
+₹0.00
+</p>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+
+<!-- =================================================
+     BALANCE
+================================================= -->
+
+<div class="card">
+
+<h2>
+⚖️ Balance
+</h2>
+
+<div id="balanceList"></div>
+
+</div>
+
+
+
+<!-- =================================================
+     SETTLEMENT
+================================================= -->
+
+<div class="card">
+
+<h2>
+🔄 Settlement
+</h2>
+
+<div id="settlementList"></div>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+
+<footer>
+
+SplitMate © 2026
+
+</footer>
+
+
+
+<script>
+
+
+/* =================================================
+   DATA
+================================================= */
+
+let members = [];
+
+let expenses = [];
+
+/*
+    WhatsApp numbers are stored separately so the
+    existing expense/balance/settlement system
+    continues to work exactly as before.
+*/
+let memberPhones = {};
+
+let splitType = "equal";
+
+
+/*
+   Current filter
+*/
+
+let currentFilteredExpenses = [];
+
+
+
+/* =================================================
+   STORAGE
+================================================= */
+
+function saveData() {
+
+    localStorage.setItem(
+        "splitmate_v3_members",
+        JSON.stringify(members)
+    );
+
+
+    localStorage.setItem(
+        "splitmate_v3_expenses",
+        JSON.stringify(expenses)
+    );
+
+
+    localStorage.setItem(
+        "splitmate_v3_memberPhones",
+        JSON.stringify(memberPhones)
+    );
+
+}
+
+
+function loadData() {
+
+    try {
+
+        members =
+            JSON.parse(
+                localStorage.getItem(
+                    "splitmate_v3_members"
+                )
+            ) || [];
+
+
+        expenses =
+            JSON.parse(
+                localStorage.getItem(
+                    "splitmate_v3_expenses"
+                )
+            ) || [];
+
+
+        memberPhones =
+            JSON.parse(
+                localStorage.getItem(
+                    "splitmate_v3_memberPhones"
+                )
+            ) || {};
+
+
+        /*
+            Safety:
+            If an older version accidentally stored
+            member objects, convert them back to names.
+        */
+
+        if(
+            members.length > 0 &&
+            typeof members[0] === "object"
+        ) {
+
+            const oldMembers = members;
+
+            members = [];
+
+            oldMembers.forEach(
+                member => {
+
+                    if(
+                        member &&
+                        member.name
+                    ) {
+
+                        members.push(
+                            member.name
+                        );
+
+
+                        if(member.phone) {
+
+                            memberPhones[
+                                member.name
+                            ] =
+                                String(
+                                    member.phone
+                                );
+
+                        }
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /*
+            Remove invalid member entries.
+        */
+
+        members =
+            members.filter(
+                name =>
+                    typeof name === "string" &&
+                    name.trim() !== ""
+            );
+
+
+    }
+    catch(error) {
+
+        members = [];
+
+        expenses = [];
+
+        memberPhones = {};
+
+    }
+
+}
+
+
+
+/* =================================================
+   DEFAULT DATE
+================================================= */
+
+function setToday() {
+
+const dateInput =
+document.getElementById(
+"expenseDate"
+);
+
+
+const today =
+new Date();
+
+
+const year =
+today.getFullYear();
+
+
+const month =
+String(
+today.getMonth() + 1
+).padStart(2,"0");
+
+
+const day =
+String(
+today.getDate()
+).padStart(2,"0");
+
+
+dateInput.value =
+`${year}-${month}-${day}`;
+
+}
+
+
+
+/* =================================================
+   ADD MEMBER
+================================================= */
+
+function addMember() {
+
+    const nameInput =
+        document.getElementById(
+            "memberName"
+        );
+
+
+    const phoneInput =
+        document.getElementById(
+            "memberPhone"
+        );
+
+
+    const name =
+        nameInput.value.trim();
+
+
+    let phone =
+        phoneInput.value.trim();
+
+
+    if(name === "") {
+
+        alert(
+            "Please enter member name."
+        );
+
+        return;
+
+    }
+
+
+    if(phone === "") {
+
+        alert(
+            "Please enter WhatsApp number."
+        );
+
+        return;
+
+    }
+
+
+    /*
+        Keep only digits.
+
+        Example:
+        +91 98765 43210
+        becomes:
+        919876543210
+    */
+
+    phone =
+        phone.replace(
+            /[^0-9]/g,
+            ""
+        );
+
+
+    if(phone.length < 10) {
+
+        alert(
+            "Please enter a valid WhatsApp number with country code."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        members.some(
+            existingName =>
+                existingName.toLowerCase() ===
+                name.toLowerCase()
+        )
+    ) {
+
+        alert(
+            "This member already exists."
+        );
+
+        return;
+
+    }
+
+
+    members.push(name);
+
+
+    memberPhones[name] =
+        phone;
+
+
+    nameInput.value = "";
+
+    phoneInput.value = "";
+
+
+    saveData();
+
+    renderAll();
+
+}
+
+
+
+/* =================================================
+   REMOVE MEMBER
+================================================= */
+
+function removeMember(index) {
+
+    const name =
+        members[index];
+
+
+    if(!name) {
+
+        return;
+
+    }
+
+
+    for(const expense of expenses) {
+
+        if(expense.payer === name) {
+
+            alert(
+                "This member is used in an expense. Delete that expense first."
+            );
+
+            return;
+
+        }
+
+
+        for(const share of expense.shares) {
+
+            if(share.member === name) {
+
+                alert(
+                    "This member is used in an expense. Delete that expense first."
+                );
+
+                return;
+
+            }
+
+        }
+
+    }
+
+
+    members.splice(
+        index,
+        1
+    );
+
+
+    delete memberPhones[name];
+
+
+    saveData();
+
+    renderAll();
+
+}
+
+
+
+/* =================================================
+   SPLIT TYPE
+================================================= */
+
+function chooseSplit(type) {
+
+splitType = type;
+
+
+const equalBtn =
+document.getElementById(
+"equalBtn"
+);
+
+
+const differentBtn =
+document.getElementById(
+"differentBtn"
+);
+
+
+const equalArea =
+document.getElementById(
+"equalArea"
+);
+
+
+const differentArea =
+document.getElementById(
+"differentArea"
+);
+
+
+if(type === "equal") {
+
+equalBtn.classList.add(
+"active"
+);
+
+differentBtn.classList.remove(
+"active"
+);
+
+equalArea.style.display =
+"block";
+
+differentArea.style.display =
+"none";
+
+}
+else {
+
+equalBtn.classList.remove(
+"active"
+);
+
+differentBtn.classList.add(
+"active"
+);
+
+equalArea.style.display =
+"none";
+
+differentArea.style.display =
+"block";
+
+}
+
+
+renderPeople();
+
+}
+
+
+
+/* =================================================
+   RENDER PEOPLE
+================================================= */
+
+function renderPeople() {
+
+const equalPeople =
+document.getElementById(
+"equalPeople"
+);
+
+
+const differentPeople =
+document.getElementById(
+"differentPeople"
+);
+
+
+const payer =
+document.getElementById(
+"payer"
+);
+
+
+equalPeople.innerHTML = "";
+
+differentPeople.innerHTML = "";
+
+
+payer.innerHTML =
+`
+<option value="">
+Select payer
+</option>
+`;
+
+
+if(members.length === 0) {
+
+equalPeople.innerHTML =
+`
+<div class="empty">
+Add members first.
+</div>
+`;
+
+
+differentPeople.innerHTML =
+`
+<div class="empty">
+Add members first.
+</div>
+`;
+
+
+return;
+
+}
+
+
+members.forEach(
+(name,index) => {
+
+
+/* PAYER */
+
+const option =
+document.createElement(
+"option"
+);
+
+option.value = name;
+
+option.textContent = name;
+
+payer.appendChild(option);
+
+
+
+/* EQUAL */
+
+const equalRow =
+document.createElement(
+"div"
+);
+
+equalRow.className =
+"person-row";
+
+
+equalRow.innerHTML =
+`
+<div class="person-left">
+
+<input
+type="checkbox"
+class="equalCheck"
+data-index="${index}"
+checked
+>
+
+<span>
+👤 ${escapeHTML(name)}
+</span>
+
+</div>
+`;
+
+
+equalPeople.appendChild(
+equalRow
+);
+
+
+
+/* DIFFERENT */
+
+const differentRow =
+document.createElement(
+"div"
+);
+
+differentRow.className =
+"person-row";
+
+
+differentRow.innerHTML =
+`
+<div class="person-left">
+
+<input
+type="checkbox"
+class="differentCheck"
+data-index="${index}"
+>
+
+<span>
+👤 ${escapeHTML(name)}
+</span>
+
+</div>
+
+<input
+type="number"
+class="amount differentAmount"
+data-index="${index}"
+placeholder="₹ 0"
+min="0"
+disabled
+>
+`;
+
+
+differentPeople.appendChild(
+differentRow
+);
+
+
+const checkbox =
+differentRow.querySelector(
+".differentCheck"
+);
+
+
+const amount =
+differentRow.querySelector(
+".differentAmount"
+);
+
+
+checkbox.addEventListener(
+"change",
+function() {
+
+amount.disabled =
+!this.checked;
+
+
+if(!this.checked) {
+
+amount.value = "";
+
+}
+
+
+updateDifferentTotal();
+
+}
+);
+
+
+amount.addEventListener(
+"input",
+updateDifferentTotal
+);
+
+}
+);
+
+}
+
+
+
+/* =================================================
+   DIFFERENT TOTAL
+================================================= */
+
+function updateDifferentTotal() {
+
+let total = 0;
+
+
+const checks =
+document.querySelectorAll(
+".differentCheck"
+);
+
+
+checks.forEach(
+check => {
+
+if(!check.checked)
+return;
+
+
+const index =
+Number(
+check.dataset.index
+);
+
+
+const input =
+document.querySelector(
+`.differentAmount[data-index="${index}"]`
+);
+
+
+total +=
+Number(input.value) || 0;
+
+}
+);
+
+
+document.getElementById(
+"differentTotal"
+).textContent =
+"Total: ₹" +
+total.toFixed(2);
+
+}
+
+
+
+/* =================================================
+   ADD EXPENSE
+================================================= */
+
+function addExpense() {
+
+if(members.length < 2) {
+
+alert(
+"Please add at least 2 members."
+);
+
+return;
+
+}
+
+
+const name =
+document
+.getElementById(
+"expenseName"
+)
+.value
+.trim();
+
+
+const date =
+document
+.getElementById(
+"expenseDate"
+)
+.value;
+
+
+const payer =
+document
+.getElementById(
+"payer"
+)
+.value;
+
+
+if(name === "") {
+
+alert(
+"Enter expense name."
+);
+
+return;
+
+}
+
+
+if(!date) {
+
+alert(
+"Please select expense date."
+);
+
+return;
+
+}
+
+
+if(!payer) {
+
+alert(
+"Please select who paid."
+);
+
+return;
+
+}
+
+
+let shares = [];
+
+let total = 0;
+
+
+
+/* =================================================
+   EQUAL
+================================================= */
+
+if(splitType === "equal") {
+
+const amount =
+Number(
+document.getElementById(
+"totalAmount"
+).value
+);
+
+
+if(amount <= 0) {
+
+alert(
+"Enter valid bill amount."
+);
+
+return;
+
+}
+
+
+const selected =
+document.querySelectorAll(
+".equalCheck:checked"
+);
+
+
+if(selected.length === 0) {
+
+alert(
+"Select at least one person."
+);
+
+return;
+
+}
+
+
+const each =
+amount / selected.length;
+
+
+selected.forEach(
+check => {
+
+const index =
+Number(
+check.dataset.index
+);
+
+
+shares.push({
+
+member:
+members[index],
+
+amount:
+each
+
+});
+
+}
+);
+
+
+total = amount;
+
+}
+
+
+
+/* =================================================
+   DIFFERENT
+================================================= */
+
+else {
+
+const selected =
+document.querySelectorAll(
+".differentCheck:checked"
+);
+
+
+if(selected.length === 0) {
+
+alert(
+"Select at least one person."
+);
+
+return;
+
+}
+
+
+for(const check of selected) {
+
+const index =
+Number(
+check.dataset.index
+);
+
+
+const input =
+document.querySelector(
+`.differentAmount[data-index="${index}"]`
+);
+
+
+const amount =
+Number(input.value);
+
+
+if(!Number.isFinite(amount)
+|| amount < 0) {
+
+alert(
+"Enter valid amount."
+);
+
+return;
+
+}
+
+
+shares.push({
+
+member:
+members[index],
+
+amount:
+amount
+
+});
+
+
+total += amount;
+
+}
+
+
+if(total <= 0) {
+
+alert(
+"Total amount must be greater than 0."
+);
+
+return;
+
+}
+
+}
+
+
+
+/* =================================================
+   SAVE
+================================================= */
+
+expenses.push({
+
+id:
+Date.now(),
+
+name:
+name,
+
+date:
+date,
+
+payer:
+payer,
+
+amount:
+total,
+
+shares:
+shares
+
+});
+
+
+saveData();
+
+
+/* CLEAR */
+
+document.getElementById(
+"expenseName"
+).value = "";
+
+
+document.getElementById(
+"totalAmount"
+).value = "";
+
+
+document.getElementById(
+"payer"
+).value = "";
+
+
+setToday();
+
+
+chooseSplit("equal");
+
+
+renderAll();
+
+
+alert(
+"Expense added successfully!"
+);
+
+}
+
+
+
+/* =================================================
+   DELETE EXPENSE
+================================================= */
+
+function deleteExpense(id) {
+
+expenses =
+expenses.filter(
+expense =>
+expense.id !== id
+);
+
+
+saveData();
+
+renderAll();
+
+}
+
+
+
+/* =================================================
+   FILTER
+================================================= */
+
+function applyFilters() {
+
+const search =
+document
+.getElementById(
+"searchBox"
+)
+.value
+.toLowerCase()
+.trim();
+
+
+const from =
+document.getElementById(
+"fromDate"
+).value;
+
+
+const to =
+document.getElementById(
+"toDate"
+).value;
+
+
+currentFilteredExpenses =
+expenses.filter(
+expense => {
+
+
+/* SEARCH */
+
+if(search !== "") {
+
+const text =
+(
+expense.name +
+" " +
+expense.payer +
+" " +
+expense.shares
+.map(
+x => x.member
+)
+.join(" ")
+)
+.toLowerCase();
+
+
+if(!text.includes(search)) {
+
+return false;
+
+}
+
+}
+
+
+
+/* FROM */
+
+if(from &&
+expense.date < from) {
+
+return false;
+
+}
+
+
+
+/* TO */
+
+if(to &&
+expense.date > to) {
+
+return false;
+
+}
+
+
+return true;
+
+}
+);
+
+
+/*
+   Newest date first
+*/
+
+currentFilteredExpenses.sort(
+(a,b) =>
+b.date.localeCompare(
+a.date
+)
+);
+
+
+renderExpenseList(
+currentFilteredExpenses
+);
+
+
+renderSelectedSummary(
+currentFilteredExpenses
+);
+
+}
+
+
+
+/* =================================================
+   QUICK FILTER
+================================================= */
+
+function quickFilter(type) {
+
+const today =
+new Date();
+
+
+let from = "";
+
+let to = "";
+
+
+if(type === "all") {
+
+clearFilters();
+
+return;
+
+}
+
+
+
+if(type === "month") {
+
+from =
+formatDate(
+new Date(
+today.getFullYear(),
+today.getMonth(),
+1
+)
+);
+
+
+to =
+formatDate(
+new Date(
+today.getFullYear(),
+today.getMonth() + 1,
+0
+)
+);
+
+}
+
+
+
+if(type === "lastMonth") {
+
+from =
+formatDate(
+new Date(
+today.getFullYear(),
+today.getMonth() - 1,
+1
+)
+);
+
+
+to =
+formatDate(
+new Date(
+today.getFullYear(),
+today.getMonth(),
+0
+)
+);
+
+}
+
+
+
+if(type === "year") {
+
+from =
+formatDate(
+new Date(
+today.getFullYear(),
+0,
+1
+)
+);
+
+
+to =
+formatDate(
+new Date(
+today.getFullYear(),
+11,
+31
+)
+);
+
+}
+
+
+
+if(type === "lastYear") {
+
+from =
+formatDate(
+new Date(
+today.getFullYear() - 1,
+0,
+1
+)
+);
+
+
+to =
+formatDate(
+new Date(
+today.getFullYear() - 1,
+11,
+31
+)
+);
+
+}
+
+
+
+document.getElementById(
+"fromDate"
+).value = from;
+
+
+document.getElementById(
+"toDate"
+).value = to;
+
+
+applyFilters();
+
+}
+
+
+
+/* =================================================
+   CLEAR FILTER
+================================================= */
+
+function clearFilters() {
+
+document.getElementById(
+"searchBox"
+).value = "";
+
+
+document.getElementById(
+"fromDate"
+).value = "";
+
+
+document.getElementById(
+"toDate"
+).value = "";
+
+
+applyFilters();
+
+}
+
+
+
+/* =================================================
+   RENDER EXPENSE LIST
+================================================= */
+
+function renderExpenseList(list) {
+
+const container =
+document.getElementById(
+"expenseList"
+);
+
+
+if(list.length === 0) {
+
+container.innerHTML =
+`
+<div class="empty">
+
+No expenses found for this period.
+
+</div>
+`;
+
+return;
+
+}
+
+
+container.innerHTML = "";
+
+
+list.forEach(
+expense => {
+
+
+let breakdown = "";
+
+
+expense.shares.forEach(
+    share => {
+
+        const phone =
+            memberPhones[
+                share.member
+            ] || "";
+
+
+        let whatsappButton = "";
+
+
+        if(phone) {
+
+            whatsappButton =
+`
+<button
+    class="primary small"
+    type="button"
+    onclick="sendWhatsApp(
+        '${escapeJS(phone)}',
+        '${escapeJS(share.member)}',
+        ${Number(share.amount)},
+        '${escapeJS(expense.name)}',
+        ${Number(expense.amount)},
+        '${escapeJS(expense.payer)}'
+    )"
+>
+    📲 WhatsApp
+</button>
+`;
+
+        }
+        else {
+
+            whatsappButton =
+`
+<button
+    class="small"
+    type="button"
+    onclick="alert('WhatsApp number is not saved for ${escapeJS(
+        share.member
+    )}.')"
+>
+    📱 Add Number
+</button>
+`;
+
+        }
+
+
+        breakdown +=
+`
+<div
+    class="breakdown-row"
+    style="
+        display:flex;
+        align-items:center;
+        gap:10px;
+        flex-wrap:wrap;
+    "
+>
+
+<span style="flex:1;">
+${escapeHTML(
+    share.member
+)}
+</span>
+
+<strong>
+₹${Number(
+    share.amount
+).toFixed(2)}
+</strong>
+
+${whatsappButton}
+
+</div>
+`;
+
+    }
+);
+
+
+const div =
+document.createElement(
+"div"
+);
+
+
+div.className =
+"expense";
+
+
+div.innerHTML =
+`
+
+<div class="expense-header">
+
+<span class="expense-name">
+
+${escapeHTML(
+expense.name
+)}
+
+</span>
+
+
+<span class="expense-total">
+
+₹${expense.amount.toFixed(2)}
+
+</span>
+
+</div>
+
+
+<div class="expense-date">
+
+📅 ${formatDisplayDate(
+expense.date
+)}
+
+</div>
+
+
+<div style="margin-top:8px;">
+
+💳 Paid by:
+
+<strong>
+${escapeHTML(
+expense.payer
+)}
+</strong>
+
+</div>
+
+
+<div class="breakdown">
+
+<strong>
+👥 Individual Share
+</strong>
+
+${breakdown}
+
+</div>
+
+
+<button
+class="danger small"
+onclick="deleteExpense(${expense.id})"
+>
+
+Delete
+
+</button>
+
+`;
+
+
+container.appendChild(div);
+
+}
+);
+
+}
+
+
+
+/* =================================================
+   SUMMARY FOR SELECTED PERIOD
+================================================= */
+
+function renderSelectedSummary(list) {
+
+let total = 0;
+
+
+list.forEach(
+expense => {
+
+total += expense.amount;
+
+}
+);
+
+
+const average =
+members.length > 0
+? total / members.length
+: 0;
+
+
+document.getElementById(
+"totalExpense"
+).textContent =
+"₹" +
+total.toFixed(2);
+
+
+document.getElementById(
+"peopleCount"
+).textContent =
+members.length;
+
+
+document.getElementById(
+"average"
+).textContent =
+"₹" +
+average.toFixed(2);
+
+}
+
+
+
+/* =================================================
+   BALANCE
+================================================= */
+
+function calculateBalances(list) {
+
+const balance = {};
+
+
+members.forEach(
+name => {
+
+balance[name] = 0;
+
+}
+);
+
+
+list.forEach(
+expense => {
+
+
+balance[
+expense.payer
+] += expense.amount;
+
+
+expense.shares.forEach(
+share => {
+
+balance[
+share.member
+] -= share.amount;
+
+}
+);
+
+}
+);
+
+
+return balance;
+
+}
+
+
+
+/* =================================================
+   SETTLEMENT
+================================================= */
+
+function calculateSettlement(list) {
+
+const balance =
+calculateBalances(list);
+
+
+const creditors = [];
+
+const debtors = [];
+
+
+members.forEach(
+name => {
+
+const value =
+balance[name];
+
+
+if(value > 0.01) {
+
+creditors.push({
+
+name:
+name,
+
+amount:
+value
+
+});
+
+}
+
+
+else if(value < -0.01) {
+
+debtors.push({
+
+name:
+name,
+
+amount:
+Math.abs(value)
+
+});
+
+}
+
+}
+);
+
+
+const result = [];
+
+
+let d = 0;
+
+let c = 0;
+
+
+while(
+d < debtors.length &&
+c < creditors.length
+) {
+
+const debtor =
+debtors[d];
+
+
+const creditor =
+creditors[c];
+
+
+const amount =
+Math.min(
+debtor.amount,
+creditor.amount
+);
+
+
+result.push({
+
+from:
+debtor.name,
+
+to:
+creditor.name,
+
+amount:
+amount
+
+});
+
+
+debtor.amount -= amount;
+
+creditor.amount -= amount;
+
+
+if(debtor.amount < 0.01)
+d++;
+
+
+if(creditor.amount < 0.01)
+c++;
+
+}
+
+
+return result;
+
+}
+
+
+
+/* =================================================
+   RENDER BALANCE + SETTLEMENT
+================================================= */
+
+function renderBalanceAndSettlement(list) {
+
+const balanceContainer =
+document.getElementById(
+"balanceList"
+);
+
+
+const settlementContainer =
+document.getElementById(
+"settlementList"
+);
+
+
+if(members.length === 0) {
+
+balanceContainer.innerHTML =
+`
+<div class="empty">
+Add members first.
+</div>
+`;
+
+settlementContainer.innerHTML =
+`
+<div class="empty">
+No settlement yet.
+</div>
+`;
+
+return;
+
+}
+
+
+const balances =
+calculateBalances(list);
+
+
+balanceContainer.innerHTML = "";
+
+
+members.forEach(
+name => {
+
+const value =
+balances[name];
+
+
+const div =
+document.createElement(
+"div"
+);
+
+
+div.className =
+"balance";
+
+
+let message = "";
+
+let className = "";
+
+
+if(value > 0.01) {
+
+message =
+"Gets ₹" +
+value.toFixed(2);
+
+className =
+"get";
+
+}
+
+
+else if(value < -0.01) {
+
+message =
+"Pays ₹" +
+Math.abs(
+value
+).toFixed(2);
+
+className =
+"pay";
+
+}
+
+
+else {
+
+message =
+"Settled";
+
+}
+
+
+div.innerHTML =
+`
+
+<strong>
+${escapeHTML(name)}
+</strong>
+
+<span class="${className}">
+${message}
+</span>
+
+`;
+
+
+balanceContainer.appendChild(
+div
+);
+
+}
+);
+
+
+
+/* SETTLEMENT */
+
+const settlements =
+calculateSettlement(list);
+
+
+settlementContainer.innerHTML = "";
+
+
+if(settlements.length === 0) {
+
+settlementContainer.innerHTML =
+`
+<div class="empty">
+Everyone is settled 🎉
+</div>
+`;
+
+return;
+
+}
+
+
+settlements.forEach(
+item => {
+
+const div =
+document.createElement(
+"div"
+);
+
+
+div.className =
+"settlement";
+
+
+div.innerHTML =
+`
+
+<strong>
+${escapeHTML(
+item.from
+)}
+</strong>
+
+→
+
+<strong>
+${escapeHTML(
+item.to
+)}
+</strong>
+
+:
+
+<strong>
+₹${item.amount.toFixed(2)}
+</strong>
+
+`;
+
+
+settlementContainer.appendChild(
+div
+);
+
+}
+);
+
+}
+
+
+
+/* =================================================
+   RENDER ALL
+================================================= */
+
+function renderAll() {
+
+renderMembers();
+
+renderPeople();
+
+applyFilters();
+
+renderBalanceAndSettlement(
+currentFilteredExpenses
+);
+
+}
+
+
+
+/* =================================================
+   MEMBERS
+================================================= */
+
+function renderMembers() {
+
+    const container =
+        document.getElementById(
+            "memberList"
+        );
+
+
+    if(members.length === 0) {
+
+        container.innerHTML =
+`
+<div class="empty">
+No members yet.
+</div>
+`;
+
+        return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    members.forEach(
+        (name,index) => {
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+
+            div.className =
+                "member";
+
+
+            const phone =
+                memberPhones[name] ||
+                "No WhatsApp number";
+
+
+            div.innerHTML =
+`
+<div>
+
+    <strong>
+        👤 ${escapeHTML(name)}
+    </strong>
+
+    <div
+        style="
+            font-size:12px;
+            color:#666;
+            margin-top:4px;
+        "
+    >
+        📱 ${escapeHTML(phone)}
+    </div>
+
+</div>
+
+<button
+    class="danger small"
+    onclick="removeMember(${index})"
+>
+    Remove
+</button>
+`;
+
+
+            container.appendChild(
+                div
+            );
+
+        }
+    );
+
+}
+
+
+
+/* =================================================
+   DATE FUNCTIONS
+================================================= */
+
+function formatDate(date) {
+
+const year =
+date.getFullYear();
+
+
+const month =
+String(
+date.getMonth() + 1
+).padStart(2,"0");
+
+
+const day =
+String(
+date.getDate()
+).padStart(2,"0");
+
+
+return `${year}-${month}-${day}`;
+
+}
+
+
+function formatDisplayDate(dateString) {
+
+const parts =
+dateString.split("-");
+
+
+if(parts.length !== 3)
+return dateString;
+
+
+return (
+parts[2] +
+"/" +
+parts[1] +
+"/" +
+parts[0]
+);
+
+}
+
+
+
+/* =================================================
+   WHATSAPP NOTIFICATION
+================================================= */
+
+function sendWhatsApp(
+    phone,
+    memberName,
+    shareAmount,
+    expenseName,
+    totalAmount,
+    payer
+) {
+
+    if(!phone) {
+
+        alert(
+            "WhatsApp number is not saved for " +
+            memberName
+        );
+
+        return;
+
+    }
+
+
+    const cleanPhone =
+        String(phone).replace(
+            /[^0-9]/g,
+            ""
+        );
+
+
+    if(cleanPhone.length < 10) {
+
+        alert(
+            "Invalid WhatsApp number for " +
+            memberName
+        );
+
+        return;
+
+    }
+
+
+    const message =
+`💸 SplitMate Expense
+
+Hi ${memberName},
+
+Expense: ${expenseName}
+Total Amount: ₹${Number(
+    totalAmount
+).toFixed(2)}
+
+Your Share: ₹${Number(
+    shareAmount
+).toFixed(2)}
+
+Paid by: ${payer}
+
+Please settle your share of ₹${Number(
+    shareAmount
+).toFixed(2)}.
+
+— SplitMate`;
+
+
+    const whatsappURL =
+        "https://wa.me/" +
+        cleanPhone +
+        "?text=" +
+        encodeURIComponent(
+            message
+        );
+
+
+    window.open(
+        whatsappURL,
+        "_blank"
+    );
+
+}
+
+
+function escapeJS(text) {
+
+    return String(text)
+        .replace(
+            /\\/g,
+            "\\\\"
+        )
+        .replace(
+            /'/g,
+            "\\'"
+        )
+        .replace(
+            /"/g,
+            '\"'
+        )
+        .replace(
+            /\n/g,
+            "\\n"
+        )
+        .replace(
+            /\r/g,
+            "\\r"
+        );
+
+}
+
+
+/* =================================================
+   SECURITY
+================================================= */
+
+function escapeHTML(text) {
+
+const div =
+document.createElement(
+"div"
+);
+
+
+div.textContent =
+text;
+
+
+return div.innerHTML;
+
+}
+
+
+
+/* =================================================
+   START
+================================================= */
+
+loadData();
+
+setToday();
+
+renderAll();
+
+</script>
+
+</body>
+
+</html>
